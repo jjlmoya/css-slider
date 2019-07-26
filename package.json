@@ -1,0 +1,27 @@
+{
+  "name": "css-slider",
+  "version": "1.0.0",
+  "description": "A Simple and Powerful CSS Slider",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjlmoya/css-slider.git"
+  },
+  "keywords": [
+    "css",
+    "slider",
+    "simple",
+    "tiny",
+    "slick",
+    "slider"
+  ],
+  "author": "jjlmoya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jjlmoya/css-slider/issues"
+  },
+  "homepage": "https://github.com/jjlmoya/css-slider#readme"
+}
