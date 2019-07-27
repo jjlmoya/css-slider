@@ -14,7 +14,7 @@ const activeButton = (buttons, index) => {
 };
 
 const toggleArrows = (index, slider) => {
-    let sliderContent = slider.closest(locators.trigger);
+    let sliderContent = getSlider(slider);
     let arrows = [...sliderContent.querySelectorAll(sliderContent.dataset.arrow)];
     if (!arrows.length) return;
     arrows.forEach((arrow) => {
@@ -29,9 +29,11 @@ const toggleArrows = (index, slider) => {
 
 };
 
+const getSlider = slider => slider.closest('[data-slide]');
+
 const onScroll = ({target: slider}) => {
-    let sliderContent = slider.closest(locators.trigger),
-        slides = slider.querySelectorAll(sliderContent.dataset.slide),
+    let sliderContent = getSlider(slider);
+    let slides = slider.querySelectorAll(sliderContent.dataset.slide),
         activeIndex = getActiveSlider(slides, slider);
     slider.dataset.lastScroll = slider.scrollLeft;
     removeActiveClass(slides);
@@ -41,7 +43,7 @@ const onScroll = ({target: slider}) => {
 };
 
 const scrollToElement = (slider, index) => {
-    let sliderContent = slider.closest(locators.trigger),
+    let sliderContent = getSlider(slider),
         slideWith = slider.querySelector(sliderContent.dataset.slide).scrollWidth,
         targetScroll = slideWith * (index - 1);
     slider.scrollLeft = targetScroll > slider.scrollWidth ? 0 : targetScroll;
@@ -54,7 +56,7 @@ const bindScrollEvents = (slider) => {
 };
 
 const onClickArrow = ({target}) => {
-    let sliderContent = target.closest('.bs_slider');
+    let sliderContent = getSlider(target.dataset.slider ? target : target.parentElement);
     let arrow = target.closest(sliderContent.dataset.arrow);
     let slider = sliderContent.querySelector(sliderContent.dataset.content);
     let slides = slider.querySelectorAll(sliderContent.dataset.slide);
@@ -76,7 +78,7 @@ const removeActiveClass = elements => {
 };
 
 const getSliderButtons = target => {
-    let slider = target.closest(locators.trigger);
+    let slider = getSlider(target);
     return slider.querySelectorAll(slider.dataset.button) || [];
 };
 
@@ -98,6 +100,41 @@ const bindAutoPlay = (slider, autoplay) => {
     }
 };
 
+const setSliderReference = (slider, settings) => {
+    let content = slider.querySelector(settings.content);
+    content.setAttribute('data-slider', settings.self);
+    let arrow = slider.querySelectorAll(settings.arrow);
+    [...arrow].forEach((arrowElement) => {
+        arrowElement.setAttribute('data-slider', settings.self);
+    });
+};
+
+const setConfigSlider = (slider, settings) => {
+    Object.keys(settings).forEach(key => {
+        slider.setAttribute(`data-${key}`, settings[key]);
+    });
+    setSliderReference(slider, settings);
+};
+
+export const Slider = (locator, settings) => {
+    try {
+        let slider = document.querySelector(locator);
+        if (settings.slide && settings.content) {
+            setConfigSlider(slider, {self: locator, ...settings});
+            bindScrollEvents(slider);
+            bindArrowsEvent(slider);
+            bindAutoPlay(slider, slider.dataset.autoplay);
+        } else {
+            throw (
+                `Parameteres. 
+                    Slide: ${slide}, 
+                    Content: ${content}`
+            );
+        }
+    } catch (e) {
+        console.error(e);
+    }
+};
 (() => {
     [...document.querySelectorAll(locators.trigger)].forEach((slider) => {
         bindScrollEvents(slider);
