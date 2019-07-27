@@ -1,6 +1,11 @@
 # css-slider
 A Simple, Lightweight and Powerful CSS Slider
 
+## How to install
+```BASH
+npm install css-slider --save-dev 
+```
+
 ## How to use
 
 ### HTML Way
