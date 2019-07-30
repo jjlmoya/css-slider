@@ -38,8 +38,6 @@ import CSSSlider from './slider/index';
 
 ```
 
-
-
 ### JS Way
 ```javascript
 import CSSSlider from './slider/index';
