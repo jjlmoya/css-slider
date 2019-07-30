@@ -14,6 +14,7 @@ npm install css-slider --save-dev
      data-autoplay="50000000"
      data-content=".bs_slider_content"
      data-slide=".bs_slide"
+     data-replay="true"
      data-arrow=".bs_slider_arrow">
     <div class="og-slider--simple__content bs_slider_content">
         <div class="bs_slide">1</div>
@@ -26,16 +27,32 @@ npm install css-slider --save-dev
 </div>
 ```
 
+#### JS to HTML Way
+```
+import CSSSlider from './slider/index';
+(() => {
+    [...document.querySelectorAll('.bs_slider')].forEach((slider) => {
+        new CSSSlider(slider, slider.dataset);
+    });
+})();
+
+```
+
+
+
 ### JS Way
 ```javascript
-import {Slider} from 'css-slider';
+import CSSSlider from './slider/index';
 
-Slider('.bs_slider', {
-    content: '.bs_slider_content',  /* Mandatory */
-    slide: '.bs_slide',  /* Mandatory */
-    autoplay: '5000', /* Optional */
-    arrow: '.bs_slider_arrow' /* Optional (Add direction to HTML)*/
-});
+new CSSSlider(document.querySelector('.bs_slider'), {
+     content: '.bs_slider_content',  /* Mandatory */
+     slide: '.bs_slide',  /* Mandatory */
+     autoplay: '5000', /* Optional */
+     replay: true, /*Optional*/
+     button: '.bs_slider_button', /*Optional*/
+     arrow: '.bs_slider_arrow' /* Optional (Add direction to HTML)*/
+ });
+
 ```
 
 ### Basic Styles
