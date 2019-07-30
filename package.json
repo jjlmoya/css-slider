@@ -1,6 +1,6 @@
 {
   "name": "css-slider",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A Simple and Powerful CSS Slider",
   "main": "index.js",
   "scripts": {

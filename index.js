@@ -1,144 +1,118 @@
-const locators = {
-    trigger: '.bs_slider',
-};
-
-const getNextSlide = (index, direction) => {
-    return index + (direction === 'left' ? 0 : 2);
-};
-
-const activeButton = (buttons, index) => {
-    removeActiveClass(buttons);
-    if (buttons[index]) {
-        buttons[index].classList.add('is-active');
-    }
-};
-
-const toggleArrows = (index, slider) => {
-    let sliderContent = getSlider(slider);
-    let arrows = [...sliderContent.querySelectorAll(sliderContent.dataset.arrow)];
-    if (!arrows.length) return;
-    arrows.forEach((arrow) => {
-        arrow.classList.remove('u-hide');
-    });
-    if (index === 0) {
-        arrows.find(({dataset}) => dataset.direction === 'left').classList.add('u-hide');
-    }
-    if (index === sliderContent.querySelectorAll(sliderContent.dataset.slide).length - 1) {
-        arrows.find(({dataset}) => dataset.direction === 'right').classList.add('u-hide');
+class CSSSlider {
+    constructor(slider, {arrow, slide, autoplay, content, button, replay}) {
+        this.slider = slider;
+        this.autoplay = autoplay;
+        this.sliderContent = this.slider.querySelector(content);
+        this.arrowLocator = arrow;
+        this.arrows = [...this.slider.querySelectorAll(arrow) || []];
+        this.slides = slider.querySelectorAll(slide);
+        this.buttons = this.slider.querySelectorAll(button) || [];
+        this.replay = !!replay;
+        this.bind();
     }
 
-};
-
-const getSlider = slider => slider.closest('[data-slide]');
-
-const onScroll = ({target: slider}) => {
-    let sliderContent = getSlider(slider);
-    let slides = slider.querySelectorAll(sliderContent.dataset.slide),
-        activeIndex = getActiveSlider(slides, slider);
-    slider.dataset.lastScroll = slider.scrollLeft;
-    removeActiveClass(slides);
-    slides[activeIndex].classList.add('is-active');
-    activeButton(getSliderButtons(slider), activeIndex);
-    toggleArrows(activeIndex, slider);
-};
-
-const scrollToElement = (slider, index) => {
-    let sliderContent = getSlider(slider),
-        slideWith = slider.querySelector(sliderContent.dataset.slide).scrollWidth,
-        targetScroll = slideWith * (index - 1);
-    slider.scrollLeft = targetScroll > slider.scrollWidth ? 0 : targetScroll;
-};
-
-const bindScrollEvents = (slider) => {
-    let contentSlider = slider.querySelector(slider.dataset.content);
-    contentSlider.addEventListener('scroll', onScroll);
-    onScroll({target: contentSlider});
-};
-
-const onClickArrow = ({target}) => {
-    let sliderContent = getSlider(target.dataset.slider ? target : target.parentElement);
-    let arrow = target.closest(sliderContent.dataset.arrow);
-    let slider = sliderContent.querySelector(sliderContent.dataset.content);
-    let slides = slider.querySelectorAll(sliderContent.dataset.slide);
-    scrollToElement(slider, getNextSlide(getActiveSlider(slides, slider), arrow.dataset.direction));
-
-};
-
-const bindArrowsEvent = (slider) => {
-    let arrows = slider.querySelectorAll(slider.dataset.arrow) || slider.querySelectorAll(slider.dataset.content);
-    [...arrows].forEach((arrow) => {
-        arrow.addEventListener('click', onClickArrow);
-    });
-};
-
-const removeActiveClass = elements => {
-    [...elements].filter((e) => e.classList.contains('is-active')).forEach((e) => {
-        e.classList.remove('is-active');
-    });
-};
-
-const getSliderButtons = target => {
-    let slider = getSlider(target);
-    return slider.querySelectorAll(slider.dataset.button) || [];
-};
-
-const getActiveSlider = (slides, parent) => {
-    const slidesLength = slides.length,
-        scrolled = parent.scrollLeft,
-        totalScroll = parent.scrollWidth;
-
-    return Math.floor(scrolled / (totalScroll / slidesLength));
-};
-
-const bindAutoPlay = (slider, autoplay) => {
-    if (autoplay) {
-        setInterval(() => {
-            let slides = slider.querySelectorAll(slider.dataset.slide);
-            let sliderContent = slider.querySelector(slider.dataset.content);
-            scrollToElement(sliderContent, getNextSlide(getActiveSlider(slides, sliderContent), 'right'));
-        }, parseInt(autoplay));
+    bind() {
+        this.bindScrollEvents();
+        this.bindArrowsEvent();
+        this.bindAutoPlay();
+        this.bindButtons();
     }
-};
 
-const setSliderReference = (slider, settings) => {
-    let content = slider.querySelector(settings.content);
-    content.setAttribute('data-slider', settings.self);
-    let arrow = slider.querySelectorAll(settings.arrow);
-    [...arrow].forEach((arrowElement) => {
-        arrowElement.setAttribute('data-slider', settings.self);
-    });
-};
-
-const setConfigSlider = (slider, settings) => {
-    Object.keys(settings).forEach(key => {
-        slider.setAttribute(`data-${key}`, settings[key]);
-    });
-    setSliderReference(slider, settings);
-};
-
-export const Slider = (locator, settings) => {
-    try {
-        let slider = document.querySelector(locator);
-        if (settings.slide && settings.content) {
-            setConfigSlider(slider, {self: locator, ...settings});
-            bindScrollEvents(slider);
-            bindArrowsEvent(slider);
-            bindAutoPlay(slider, slider.dataset.autoplay);
-        } else {
-            throw (
-                `Parameteres. 
-                    Slide: ${slide}, 
-                    Content: ${content}`
-            );
+    getNextSlide(direction) {
+        let nextIndex = this.activeIndex + (direction === 'left' ? 0 : 2);
+        if (nextIndex <= this.slides.length)  {
+            return nextIndex;
         }
-    } catch (e) {
-        console.error(e);
+        if (this.replay) {
+            return 1;
+        }
+        return this.activeIndex + 1;
     }
-};
-(() => {
-    [...document.querySelectorAll(locators.trigger)].forEach((slider) => {
-        bindScrollEvents(slider);
-        bindArrowsEvent(slider);
-        bindAutoPlay(slider, slider.dataset.autoplay);
-    });
-})();
+
+    onScroll() {
+        this.activeIndex = this.getActiveSlide();
+        this.removeActiveClass(this.slides);
+        this.slides[this.activeIndex].classList.add('is-active');
+        this.activeButton(this.buttons);
+        this.toggleArrows();
+    }
+
+    getActiveSlide() {
+        const slidesLength = this.slides.length,
+            scrolled = this.sliderContent.scrollLeft,
+            totalScroll = this.sliderContent.scrollWidth;
+
+        return Math.floor(scrolled / (totalScroll / slidesLength));
+    }
+
+    scrollToElement(index) {
+        let slideWith = this.slides[index - 1].scrollWidth,
+            targetScroll = slideWith * (index - 1);
+        this.sliderContent.scrollLeft = targetScroll > this.sliderContent.scrollWidth ? 0 : targetScroll;
+    }
+
+    bindScrollEvents() {
+        this.sliderContent.addEventListener('scroll', this.onScroll.bind(this));
+        this.onScroll();
+    }
+
+    onClickArrow({target}) {
+        let arrow = target.closest(this.arrowLocator);
+        let nextSlide = this.getNextSlide(arrow.dataset.direction);
+        this.scrollToElement(nextSlide);
+    }
+
+    onClickButton({target}) {
+        this.scrollToElement(parseInt(target.dataset.index));
+    }
+
+    bindButtons() {
+        this.buttons.forEach((button, index) => {
+            button.setAttribute('data-index', index + 1);
+            button.addEventListener('click', this.onClickButton.bind(this));
+        });
+    }
+
+    bindArrowsEvent() {
+        this.arrows.forEach((arrow) => {
+            arrow.addEventListener('click', this.onClickArrow.bind(this));
+        });
+    }
+
+    removeActiveClass(elements) {
+        [...elements].filter((e) => e.classList.contains('is-active')).forEach((e) => {
+            e.classList.remove('is-active');
+        });
+    }
+
+    bindAutoPlay() {
+        if (this.autoplay) {
+            setInterval(() => {
+                this.scrollToElement(this.getNextSlide('right'));
+            }, parseInt(this.autoplay));
+        }
+    }
+
+    activeButton(buttons) {
+        this.removeActiveClass(buttons);
+        if (this.buttons[this.activeIndex]) {
+            buttons[this.activeIndex].classList.add('is-active');
+        }
+    }
+
+    toggleArrows() {
+        if (!this.arrows.length) return;
+        this.arrows.forEach((arrow) => {
+            arrow.style.display = 'inherit';
+        });
+        if (this.activeIndex === 0) {
+            this.arrows.find(({dataset}) => dataset.direction === 'left').style.display = 'none';
+        }
+        if (this.activeIndex === this.slides.length - 1 && !this.replay) {
+            this.arrows.find(({dataset}) => dataset.direction === 'right').style.display = 'none';
+        }
+
+    }
+}
+
+export default CSSSlider;
