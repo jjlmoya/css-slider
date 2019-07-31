@@ -1,4 +1,4 @@
-class CSSSlider {
+export class CSSSlider {
     constructor(slider, {arrow, slide, autoplay, content, button, replay}) {
         this.slider = slider;
         this.autoplay = autoplay;
@@ -115,4 +115,4 @@ class CSSSlider {
     }
 }
 
-export default CSSSlider;
+export const SliderDefaultLocator = '.bs_slider';

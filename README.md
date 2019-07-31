@@ -29,7 +29,7 @@ npm install css-slider --save-dev
 
 #### JS to HTML Way
 ```
-import CSSSlider from './slider/index';
+import {CSSSlider} from './slider/index';
 (() => {
     [...document.querySelectorAll('.bs_slider')].forEach((slider) => {
         new CSSSlider(slider, slider.dataset);
@@ -40,7 +40,7 @@ import CSSSlider from './slider/index';
 
 ### JS Way
 ```javascript
-import CSSSlider from './slider/index';
+import {CSSSlider} from './slider/index';
 
 new CSSSlider(document.querySelector('.bs_slider'), {
      content: '.bs_slider_content',  /* Mandatory */
