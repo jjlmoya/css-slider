@@ -94,14 +94,14 @@ export class CSSSlider {
     }
 
     activeButton (buttons) {
-        this.removeActiveClass(buttons)
+        this.removeActiveClass(buttons);
         if (this.buttons[this.activeIndex]) {
             buttons[this.activeIndex].classList.add('is-active')
         }
     }
 
     toggleArrows () {
-        if (!this.arrows.length) return
+        if (!this.arrows.length) return;
         this.arrows.forEach((arrow) => {
             arrow.style.display = 'inherit'
         })
