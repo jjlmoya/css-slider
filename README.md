@@ -23,7 +23,7 @@ npm install css-slider
 ```
 
 #### JS to HTML Way
-```
+```javascript
 import { CssSlider } from './slider/index';
 (() => {
     [...document.querySelectorAll('.js-css-slider')].forEach((slider) => {
