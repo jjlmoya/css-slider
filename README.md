@@ -3,36 +3,31 @@ A Simple, Lightweight and Powerful CSS Slider
 
 ## How to install
 ```BASH
-npm install css-slider --save-dev 
+npm install css-slider
 ```
 
 ## How to use
 
 ### HTML Way
 ```HTML
-<div class="og-slider--simple bs_slider "
-     data-autoplay="50000000"
-     data-content=".bs_slider_content"
-     data-slide=".bs_slide"
-     data-replay="true"
-     data-arrow=".bs_slider_arrow">
-    <div class="og-slider--simple__content bs_slider_content">
-        <div class="bs_slide">1</div>
-        <div class="bs_slide">2</div>
-        <div class="bs_slide">3</div>
-        <div class="bs_slide"> You can add your content here</div>
+<div class="js-css-slider" data-autoplay="5000" data-content=".js-css-slider__content" data-slide=".js-css-slider__slide" data-replay="true" data-arrow=".js-css-slider__arrow">
+    <div class="js-css-slider__content">
+        <div class="js-css-slider__slide">1</div>
+        <div class="js-css-slider__slide">2</div>
+        <div class="js-css-slider__slide">3</div>
+        <div class="js-css-slider__slide"> You can add your content here</div>
     </div>
-    <div class="bs_slider_arrow" direction="left"> [LEFT] </div>
-    <div class="bs_slider_arrow" direction="right"> [RIGHT] </div>
+    <div class="js-css-slider__arrow js-css-slider__arrow--left" data-direction="left">[LEFT]</div>
+    <div class="js-css-slider__arrow js-css-slider__arrow--right" data-direction="right">[RIGHT]</div>
 </div>
 ```
 
 #### JS to HTML Way
 ```
-import {CSSSlider} from './slider/index';
+import { CssSlider } from './slider/index';
 (() => {
-    [...document.querySelectorAll('.bs_slider')].forEach((slider) => {
-        new CSSSlider(slider, slider.dataset);
+    [...document.querySelectorAll('.js-css-slider')].forEach((slider) => {
+        new CssSlider(slider, slider.dataset);
     });
 })();
 
@@ -40,39 +35,40 @@ import {CSSSlider} from './slider/index';
 
 ### JS Way
 ```javascript
-import {CSSSlider} from './slider/index';
+import { CssSlider } from './slider/index';
 
-new CSSSlider(document.querySelector('.bs_slider'), {
-     content: '.bs_slider_content',  /* Mandatory */
-     slide: '.bs_slide',  /* Mandatory */
-     autoplay: '5000', /* Optional */
-     replay: true, /*Optional*/
-     button: '.bs_slider_button', /*Optional*/
-     arrow: '.bs_slider_arrow' /* Optional (Add direction to HTML)*/
- });
-
+var instance = new CssSlider(slider, {
+    content: '.js-css-slider__content', /* Mandatory */
+    slide: '.js-css-slider__slide', /* Mandatory */
+    autoplay: '5000', /* Optional */
+    replay: true, /* Optional */
+    button: '.js-css-slider__button', /* Optional */
+    arrow: '.js-css-slider__arrow' /* Optional (Add direction to HTML) */
+});
 ```
 
 ### Basic Styles
 ````SCSS
-    .og-slider--simple {
-      overflow: hidden;
-      &__content {
-        display:grid;
-        grid-auto-flow: column;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
-        &::-webkit-scrollbar,
-        &::-webkit-scrollbar-thumb,
-        &::-webkit-scrollbar-track {
-          display: none;
-        }
-      }
-      &__slide {
-        height: 80vh;
-        width: 100vw;
-        scroll-snap-align: start;
-      }
+.js-css-slider {
+  overflow: hidden;
+
+  &__content {
+    display: grid;
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb,
+    &::-webkit-scrollbar-track {
+      display: none;
     }
+  }
+
+  &__slide {
+    width: 100vw;
+    scroll-snap-align: start;
+  }
+}
 ````
