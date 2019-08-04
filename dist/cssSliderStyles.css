@@ -1,0 +1,2 @@
+.js-css-slider{overflow:hidden}.js-css-slider__content{display:grid;grid-auto-flow:column;overflow-x:auto;scroll-behavior:smooth;-ms-scroll-snap-type:x mandatory;scroll-snap-type:x mandatory}.js-css-slider__content::-webkit-scrollbar,.js-css-slider__content::-webkit-scrollbar-thumb,.js-css-slider__content::-webkit-scrollbar-track{display:none}.js-css-slider__slide{width:100vw;scroll-snap-align:start}
+

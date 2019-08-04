@@ -1,0 +1,22 @@
+.js-css-slider {
+  overflow: hidden;
+
+  &__content {
+    display: grid;
+    grid-auto-flow: column;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+
+    &::-webkit-scrollbar,
+    &::-webkit-scrollbar-thumb,
+    &::-webkit-scrollbar-track {
+      display: none;
+    }
+  }
+
+  &__slide {
+    width: 100vw;
+    scroll-snap-align: start;
+  }
+}
