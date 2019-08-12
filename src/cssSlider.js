@@ -1,5 +1,7 @@
 export default class CssSlider {
+
     constructor (slider, { arrow, slide, autoplay, content, button, replay }) {
+        this.activeClass = 'is-active';
         this.slider = slider;
         this.autoplay = autoplay;
         this.sliderContent = this.slider.querySelector(content);
@@ -32,7 +34,7 @@ export default class CssSlider {
     onScroll () {
         this.activeIndex = this.getActiveSlide();
         this.removeActiveClass(this.slides);
-        this.slides[this.activeIndex].classList.add('is-active');
+        this.slides[this.activeIndex].classList.add(this.activeClass);
         this.activeButton(this.buttons);
         this.toggleArrows();
     }
@@ -80,8 +82,8 @@ export default class CssSlider {
     }
 
     removeActiveClass (elements) {
-        [...elements].filter((e) => e.classList.contains('is-active')).forEach((e) => {
-            e.classList.remove('is-active');
+        [...elements].filter((e) => e.classList.contains(this.activeClass)).forEach((e) => {
+            e.classList.remove(this.activeClass);
         });
     }
 
@@ -96,7 +98,7 @@ export default class CssSlider {
     activeButton (buttons) {
         this.removeActiveClass(buttons);
         if (this.buttons[this.activeIndex]) {
-            buttons[this.activeIndex].classList.add('is-active');
+            buttons[this.activeIndex].classList.add(this.activeClass);
         }
     }
 
