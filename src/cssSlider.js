@@ -20,6 +20,11 @@ export default class CssSlider {
         this.bindButtons();
     }
 
+    dispatchEvent(eventName) {
+        let sliderEvent = new Event('slider::' + eventName);
+        document.dispatchEvent(sliderEvent);
+    }
+
     getNextSlide (direction) {
         const nextIndex = this.activeIndex + (direction === 'left' ? 0 : 2);
         if (nextIndex <= this.slides.length) {
@@ -27,6 +32,7 @@ export default class CssSlider {
         }
         if (this.replay) {
             return 1;
+            this.dispatchEvent('restart');
         }
         return this.activeIndex + 1;
     }
@@ -34,16 +40,17 @@ export default class CssSlider {
     onScroll () {
         this.activeIndex = this.getActiveSlide();
         this.removeActiveClass(this.slides);
+        this.dispatchEvent('beforeChange');
         this.slides[this.activeIndex].classList.add(this.activeClass);
         this.activeButton(this.buttons);
         this.toggleArrows();
+        this.dispatchEvent('afterChange');
     }
 
     getActiveSlide () {
         const slidesLength = this.slides.length;
         const scrolled = this.sliderContent.scrollLeft;
         const totalScroll = this.sliderContent.scrollWidth;
-
         return Math.floor(scrolled / (totalScroll / slidesLength));
     }
 

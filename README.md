@@ -1,7 +1,9 @@
 # css-slider
+
 A Simple, Lightweight and Powerful CSS Slider
 
 ## How to install
+
 ```BASH
 npm install css-slider
 ```
@@ -9,6 +11,7 @@ npm install css-slider
 ## How to use
 
 ### HTML Way
+
 ```HTML
 <div class="js-css-slider" data-autoplay="5000" data-content=".js-css-slider__content" data-slide=".js-css-slider__slide" data-replay="true" data-arrow=".js-css-slider__arrow">
     <div class="js-css-slider__content">
@@ -23,6 +26,7 @@ npm install css-slider
 ```
 
 #### JS to HTML Way
+
 ```javascript
 import { CssSlider } from './slider/index';
 (() => {
@@ -30,10 +34,10 @@ import { CssSlider } from './slider/index';
         new CssSlider(slider, slider.dataset);
     });
 })();
-
 ```
 
 ### JS Way
+
 ```javascript
 import { CssSlider } from './slider/index';
 
@@ -48,7 +52,8 @@ var instance = new CssSlider(slider, {
 ```
 
 ### Basic Styles
-````SCSS
+
+```SCSS
 .js-css-slider {
   overflow: hidden;
 
@@ -71,4 +76,16 @@ var instance = new CssSlider(slider, {
     scroll-snap-align: start;
   }
 }
-````
+```
+
+## Events
+### slider::restart
+When the slider reach the last element and replay is active. Slider go to the first and slide and trigger restart event.
+### slider::beforeChange
+### slider::afterChange
+| Event Name           | Description                                                  |
+| -------------------- | :----------------------------------------------------------- |
+| slider::restart      | When the slider reach the last element and replay is active. Slider go to the first and slide and trigger restart event. |
+| slider::beforeChange |  -- |                                                         |
+| slider::afterChange  |  -- |                                                         |
+
